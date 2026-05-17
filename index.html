@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: #f5f0e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Caveat', cursive;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(242,216,143,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(230,104,136,0.08) 0%, transparent 40%),
+      radial-gradient(circle at 60% 80%, rgba(180,181,52,0.08) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .scene {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding: 40px 20px;
+  }
+
+  .landing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .landing.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+    position: absolute;
+  }
+
+  .landing-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 5vw, 36px);
+    color: #3d2b1f;
+    text-align: center;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  .landing-sub {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(16px, 3vw, 20px);
+    color: #7a5c4a;
+    text-align: center;
+  }
+
+  .envelope-wrapper {
+    position: relative;
+    width: min(380px, 90vw);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .envelope-wrapper:hover { transform: translateY(-4px); }
+
+  .envelope-wrapper.opening {
+    animation: envelopeShake 0.4s ease;
+  }
+
+  @keyframes envelopeShake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-2deg) translateY(-4px); }
+    75% { transform: rotate(2deg) translateY(-4px); }
+  }
+
+  .envelope {
+    width: 100%;
+    aspect-ratio: 4/2.8;
+    background: #e8dfd0;
+    border-radius: 4px;
+    border: 1px solid #c8b89a;
+    position: relative;
+    overflow: visible;
+    box-shadow: 0 8px 32px rgba(61,43,31,0.15), 0 2px 8px rgba(61,43,31,0.1);
+  }
+
+  .envelope::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, transparent 49.5%, #c8b89a 49.5%, #c8b89a 50.5%, transparent 50.5%),
+      linear-gradient(225deg, transparent 49.5%, #c8b89a 49.5%, #c8b89a 50.5%, transparent 50.5%);
+    border-radius: 4px;
+  }
+
+  .envelope-flap {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 55%;
+    background: #ddd3c0;
+    clip-path: polygon(0 0, 100% 0, 50% 85%);
+    border-bottom: 1px solid #c8b89a;
+    transform-origin: top center;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+  }
+
+  .envelope-flap.open { transform: rotateX(180deg); }
+
+  .seal {
+    position: absolute;
+    top: 28%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px; height: 44px;
+    background: #E36888;
+    border-radius: 50%;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(227,104,136,0.4);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .seal.hidden {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  .seal::after { content: '✦'; }
+
+  .card-in-envelope {
+    position: absolute;
+    bottom: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 85%; height: 90%;
+    background: #f2ede3;
+    border-radius: 3px;
+    z-index: 5;
+    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+  }
+
+  .card-in-envelope img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+  }
+
+  .card-in-envelope.rising {
+    transform: translateX(-50%) translateY(-110%);
+  }
+
+  .open-btn {
+    padding: 14px 36px;
+    background: #3d2b1f;
+    color: #f7f0e6;
+    border: none;
+    border-radius: 100px;
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 4px 16px rgba(61,43,31,0.25);
+  }
+
+  .open-btn:hover { background: #5a3f2e; transform: translateY(-2px); }
+  .open-btn:active { transform: translateY(0); }
+
+  /* ─── POSTCARD OVERLAY ─── */
+  .postcard-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(61,43,31,0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+    pointer-events: none;
+    transition: background 0.6s ease;
+  }
+
+  .postcard-overlay.visible {
+    background: rgba(61,43,31,0.6);
+    pointer-events: all;
+  }
+
+  /* The postcard is just the image now */
+  .postcard {
+    position: relative;
+    width: min(820px, 95vw);
+    transform: scale(0.4) rotateY(20deg);
+    opacity: 0;
+    transition: transform 0.9s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.5s ease;
+    box-shadow: 0 24px 80px rgba(61,43,31,0.45), 0 8px 24px rgba(61,43,31,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .postcard.revealed {
+    transform: scale(1) rotateY(0deg);
+    opacity: 1;
+  }
+
+  .postcard img {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: -14px; right: -14px;
+    width: 36px; height: 36px;
+    background: #3d2b1f;
+    color: #f7f0e6;
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    font-family: sans-serif;
+    transition: background 0.2s;
+    line-height: 1;
+  }
+
+  .close-btn:hover { background: #5a3f2e; }
+
+  .confetti-piece {
+    position: fixed;
+    pointer-events: none;
+    z-index: 300;
+    animation: confettiFall linear forwards;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  .hint {
+    font-family: 'Caveat', cursive;
+    font-size: 14px;
+    color: rgba(61,43,31,0.5);
+    text-align: center;
+    animation: hintPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes hintPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.9; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="landing" id="landing">
+    <p class="landing-title">You have a letter<br>waiting for you ✦</p>
+    <p class="landing-sub">From someone who loves you very much</p>
+
+    <div class="envelope-wrapper" id="envelopeWrapper">
+      <div class="envelope">
+        <div class="card-in-envelope" id="cardInEnvelope">
+          <img src="birthday_card.png" alt="birthday card" />
+        </div>
+        <div class="envelope-flap" id="envFlap"></div>
+        <div class="seal" id="seal"></div>
+      </div>
+    </div>
+
+    <button class="open-btn" id="openBtn" onclick="startOpen()">Open your letter ✦</button>
+    <p class="hint">tap to reveal</p>
+  </div>
+</div>
+
+<!-- POSTCARD OVERLAY -->
+<div class="postcard-overlay" id="postcardOverlay">
+  <div class="postcard" id="postcard">
+    <button class="close-btn" onclick="closeCard()" title="close">×</button>
+    <img src="birthday_card.png" alt="Whistler birthday card" />
+  </div>
+</div>
+
+<script>
+  let opened = false;
+
+  function startOpen() {
+    if (opened) return;
+    opened = true;
+
+    const wrapper = document.getElementById('envelopeWrapper');
+    const flap = document.getElementById('envFlap');
+    const seal = document.getElementById('seal');
+    const cardIn = document.getElementById('cardInEnvelope');
+    const openBtn = document.getElementById('openBtn');
+
+    openBtn.style.opacity = '0';
+    openBtn.style.pointerEvents = 'none';
+
+    wrapper.classList.add('opening');
+    setTimeout(() => { seal.classList.add('hidden'); }, 200);
+    setTimeout(() => { flap.classList.add('open'); }, 500);
+    setTimeout(() => { cardIn.classList.add('rising'); }, 1000);
+    setTimeout(() => { showPostcard(); }, 1500);
+  }
+
+  function showPostcard() {
+    const overlay = document.getElementById('postcardOverlay');
+    const postcard = document.getElementById('postcard');
+    const landing = document.getElementById('landing');
+
+    landing.classList.add('hidden');
+    overlay.classList.add('visible');
+
+    setTimeout(() => {
+      postcard.classList.add('revealed');
+      launchConfetti();
+    }, 100);
+  }
+
+  function closeCard() {
+    const overlay = document.getElementById('postcardOverlay');
+    const postcard = document.getElementById('postcard');
+    const landing = document.getElementById('landing');
+
+    postcard.classList.remove('revealed');
+    overlay.classList.remove('visible');
+
+    setTimeout(() => {
+      landing.classList.remove('hidden');
+      document.getElementById('envFlap').classList.remove('open');
+      document.getElementById('seal').classList.remove('hidden');
+      document.getElementById('cardInEnvelope').classList.remove('rising');
+      document.getElementById('envelopeWrapper').classList.remove('opening');
+      const openBtn = document.getElementById('openBtn');
+      openBtn.style.opacity = '1';
+      openBtn.style.pointerEvents = 'all';
+      opened = false;
+    }, 500);
+  }
+
+  function launchConfetti() {
+    const colors = ['#F08C21','#F2D88F','#E36888','#6698CC','#B4B534','#3d2b1f'];
+    for (let i = 0; i < 60; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.top = '-10px';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width = (6 + Math.random() * 8) + 'px';
+        el.style.height = (6 + Math.random() * 8) + 'px';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = (2 + Math.random() * 2) + 's';
+        el.style.animationDelay = (Math.random() * 0.5) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 4000);
+      }, i * 30);
+    }
+  }
+</script>
+</body>
+</html>
